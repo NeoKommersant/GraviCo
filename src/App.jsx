@@ -1,6 +1,7 @@
 // src/App.jsx
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import HeroSection from './HeroSection';
 export default function App() {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
@@ -189,30 +190,15 @@ export default function App() {
       <div ref={contentRef} className="flex w-[300vw]">
         {/* Секция 1 */}
         <section className="flex-shrink-0 w-screen h-screen p-1">
-          <div
-            className="w-full h-full bg-main-bg bg-cover bg-center rounded-xl shadow-lg flex flex-col items-center justify-center space-y-4"
-          >
-            <h1
-              className="text-5xl md:text-7xl font-bold text-white tracking-wide"
-              style={{ fontFamily: 'Manrope' }}
-            >
-              GraviCo
-            </h1>
-            <p
-              className="text-lg md:text-xl text-gray-200 text-center px-6"
-              style={{ fontFamily: 'Manrope' }}
-            >
-              Маркетинг — который притягивает клиентов
-            </p>
-            <button
-              onClick={handleExploreClick}
-  className="border-star-button text-white font-middle py-2 px-8 rounded-3xl text-lg md:text-xl transition duration-300 hover:bg-white hover:text-gray-900"
-              style={{ fontFamily: 'Manrope' }}
-            >
-              Погрузиться
-            </button>
+          <div className="w-full h-full relative rounded-xl shadow-lg overflow-hidden">
+            <HeroSection visible={section === 0}
+              onDiveComplete={() => {
+                setSection(1);
+                setSubSection(0);
+              }} />
           </div>
         </section>
+
 
         {/* Секция 2 */}
         <section className="flex-shrink-0 w-screen flex flex-col">
