@@ -7,6 +7,7 @@ const HeroScene = ({ onDiveComplete }) => {
    const [isDiving, setIsDiving] = useState(false);
    const letterRefs = useRef([]);
    const audioRef = useRef(null);
+   const bgRef = useRef(null);
 
    // 1. Создаём Audio при монтировании
    useEffect(() => {
@@ -16,6 +17,10 @@ const HeroScene = ({ onDiveComplete }) => {
 
    // 2. Параллакс-фон: реагирует на курсор, пока isDiving = false
    useEffect(() => {
+      const bg = bgRef.current;
+      if (!bg) return;
+      let rafId;
+
       const handleMouseMove = (e) => {
          if (isDiving) return;
          const { innerWidth, innerHeight } = window;
@@ -25,14 +30,17 @@ const HeroScene = ({ onDiveComplete }) => {
          const moveY = yNorm * 15;
          const scaleAmount = 1 + Math.abs(xNorm) * 0.02 + Math.abs(yNorm) * 0.02;
 
-         const bg = document.querySelector('.hero-parallax');
-         if (bg) {
+         cancelAnimationFrame(rafId);
+         rafId = requestAnimationFrame(() => {
             bg.style.transform = `translate(${moveX}px, ${moveY}px) scale(${scaleAmount})`;
-         }
+         });
       };
 
       window.addEventListener('mousemove', handleMouseMove);
-      return () => window.removeEventListener('mousemove', handleMouseMove);
+      return () => {
+         window.removeEventListener('mousemove', handleMouseMove);
+         cancelAnimationFrame(rafId);
+      };
    }, [isDiving]);
 
    // 3. Обработчик «погружения»
@@ -52,9 +60,8 @@ const HeroScene = ({ onDiveComplete }) => {
       }
 
       // 3.3. Добавляем класс для фоновой анимации
-      const bg = document.querySelector('.hero-parallax');
-      if (bg) {
-         bg.classList.add('parallax-dive');
+      if (bgRef.current) {
+         bgRef.current.classList.add('parallax-dive');
       }
 
       // 3.4. Анимируем буквы: задаём задержку и вешаем класс
@@ -81,7 +88,7 @@ const HeroScene = ({ onDiveComplete }) => {
 
    return (
       <div className="hero-container">
-         <div className="hero-parallax" />
+         <div className="hero-parallax" ref={bgRef} />
 
          <div className="logo-container">
             {logoText.map((char, i) => (
