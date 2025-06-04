@@ -1,7 +1,9 @@
 // src/App.jsx
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
-import HeroSection from './HeroSection';
+// import HeroSection from './HeroSection'; // ← пока не используем, можно убрать
+import HeroScene from './components/HeroScene';
+
 export default function App() {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
@@ -9,32 +11,51 @@ export default function App() {
   const [subSection, setSubSection] = useState(0);
   const teleportRef = useRef(false);
   const prevRef = useRef({ section: 0, sub: 0 });
+
   useEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
+    if (!container || !content) return;
+
     const vw = container.clientWidth;
     const vh = container.clientHeight;
     const sectionsCount = 3;
-    const subCounts = [0, 2, 1]; // Обновите при добавлении новых секций
+    const subCounts = [0, 2, 1]; // число подсекций у каждой секции
     const threshold = 50;
     const maxDrag = Math.min(vw, vh) / 2;
-    let startX = 0, startY = 0, deltaX = 0, deltaY = 0;
-    let moving = false, baseX = 0, baseY = 0;
-    let isHorizontal = false, isVertical = false;
+
+    let startX = 0,
+      startY = 0,
+      deltaX = 0,
+      deltaY = 0;
+    let moving = false,
+      baseX = 0,
+      baseY = 0;
+    let isHorizontal = false,
+      isVertical = false;
+
     function rubberband(delta, limit) {
       if (delta > limit) return limit + (delta - limit) * 0.15;
       if (delta < -limit) return -limit + (delta + limit) * 0.15;
       return delta;
     }
+
     function applyDrag() {
       const rX = isHorizontal ? rubberband(deltaX, maxDrag) : 0;
       const rY = isVertical ? rubberband(deltaY, maxDrag) : 0;
-      const maxTiltY = 10; // Максимальный угол наклона
+      const maxTiltY = 10;
       const foldFactor = 0.3;
       const angleY = isHorizontal
-        ? (rX / maxDrag) * maxTiltY * (1 + Math.abs(rX) / maxDrag * foldFactor) * 0.15
+        ? (rX / maxDrag) *
+        maxTiltY *
+        (1 + (Math.abs(rX) / maxDrag) * foldFactor) *
+        0.15
         : 0;
-      const brightness = 1 - Math.min(Math.abs(rX) / maxDrag * 0.3, 0.15) - Math.min(Math.abs(rY) / maxDrag * 0.3, 0.15);
+      const brightness =
+        1 -
+        Math.min((Math.abs(rX) / maxDrag) * 0.3, 0.15) -
+        Math.min((Math.abs(rY) / maxDrag) * 0.3, 0.15);
+
       gsap.set(content, {
         x: baseX + rX,
         y: baseY + rY,
@@ -44,6 +65,7 @@ export default function App() {
         transformOrigin: 'center center',
       });
     }
+
     function resetStyle() {
       gsap.to(content, {
         rotationX: 0,
@@ -53,23 +75,30 @@ export default function App() {
         ease: 'power2.out',
       });
     }
+
     function onTouchStart(e) {
       moving = true;
       startX = e.touches ? e.touches[0].clientX : e.clientX;
       startY = e.touches ? e.touches[0].clientY : e.clientY;
-      deltaX = 0; deltaY = 0;
-      isHorizontal = false; isVertical = false;
-      baseX = -section * vw; baseY = -subSection * vh;
+      deltaX = 0;
+      deltaY = 0;
+      isHorizontal = false;
+      isVertical = false;
+      baseX = -section * vw;
+      baseY = -subSection * vh;
       gsap.killTweensOf(content);
     }
+
     function onTouchMove(e) {
       if (!moving) return;
       const dx = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
       const dy = (e.touches ? e.touches[0].clientY : e.clientY) - startY;
+
       if (!isHorizontal && !isVertical) {
         if (Math.abs(dx) > Math.abs(dy)) isHorizontal = true;
         else isVertical = true;
       }
+
       if (isHorizontal) {
         const canLeft = section < sectionsCount - 1;
         const canRight = section > 0;
@@ -83,13 +112,16 @@ export default function App() {
         if ((dy < 0 && !canDown) || (dy > 0 && !canUp)) return;
         deltaY = dy;
       }
+
       applyDrag();
     }
+
     function onTouchEnd() {
       moving = false;
       let newSec = section;
       let newSub = subSection;
       let horizSwipe = false;
+
       if (isHorizontal && Math.abs(deltaX) > threshold) {
         horizSwipe = true;
         if (deltaX < 0 && section < sectionsCount - 1) newSec = section + 1;
@@ -100,10 +132,15 @@ export default function App() {
         if (deltaY < 0 && subSection < maxSub) newSub = subSection + 1;
         else if (deltaY > 0 && subSection > 0) newSub = subSection - 1;
       }
-      if (horizSwipe && subSection > 0 && newSec !== section) teleportRef.current = true;
-      setSection(newSec); setSubSection(newSub);
+
+      if (horizSwipe && subSection > 0 && newSec !== section)
+        teleportRef.current = true;
+
+      setSection(newSec);
+      setSubSection(newSub);
       resetStyle();
     }
+
     function onMouseDown(e) {
       onTouchStart(e);
     }
@@ -116,33 +153,35 @@ export default function App() {
     function onWheel(e) {
       e.preventDefault();
       if (e.deltaY < 0 && subSection > 0) {
-        setSubSection(subSection - 1);
+        setSubSection((prev) => prev - 1);
       } else if (e.deltaY > 0 && subSection < subCounts[section]) {
-        setSubSection(subSection + 1);
+        setSubSection((prev) => prev + 1);
       }
     }
     function onKeyDown(e) {
       if (e.key === 'ArrowRight') {
         if (section < sectionsCount - 1) {
-          setSection(section + 1); // ПРАВИЛЬНОЕ ПЕРЕМЕЩЕНИЕ ВПРАВО
+          setSection((prev) => prev + 1);
         } else {
-          setSection(sectionsCount - 1); // ТЕЛЕПОРТАЦИЯ НА ПОСЛЕДНЮЮ СЕКЦИЮ
+          setSection(sectionsCount - 1);
         }
       } else if (e.key === 'ArrowLeft') {
         if (section > 0) {
-          setSection(section - 1); // ПРАВИЛЬНОЕ ПЕРЕМЕЩЕНИЕ ВЛЕВО
+          setSection((prev) => prev - 1);
         } else {
-          setSection(0); // ТЕЛЕПОРТАЦИЯ НА ПЕРВУЮ СЕКЦИЮ
+          setSection(0);
         }
       } else if (e.key === 'ArrowDown') {
         const maxSub = subCounts[section];
         if (subSection < maxSub) {
-          setSubSection(subSection + 1);
+          setSubSection((prev) => prev + 1);
         }
       } else if (e.key === 'ArrowUp' && subSection > 0) {
-        setSubSection(subSection - 1);
+        setSubSection((prev) => prev - 1);
       }
     }
+
+    // Привязываем события
     container.addEventListener('touchstart', onTouchStart, { passive: true });
     container.addEventListener('touchmove', onTouchMove, { passive: true });
     container.addEventListener('touchend', onTouchEnd);
@@ -151,20 +190,38 @@ export default function App() {
     container.addEventListener('mouseup', onMouseUp);
     container.addEventListener('wheel', onWheel);
     window.addEventListener('keydown', onKeyDown);
+
+    // Анимация «прыжка»/телепорта при смене секции
     const prev = prevRef.current;
     const targetX = -section * vw;
     const targetY = -subSection * vh;
+
     if (teleportRef.current) {
       const tl = gsap.timeline();
-      tl.to(content, { x: targetX - 100, duration: 0.2, ease: 'power2.in' }); // Сдвиг влево
-      tl.set(content, { x: targetX, y: targetY }); // Перемещение на целевую позицию
-      tl.to(content, { x: targetX, duration: 0.3, ease: 'power2.out' }); // Возврат на место
+      tl.to(content, { x: targetX - 100, duration: 0.2, ease: 'power2.in' });
+      tl.set(content, { x: targetX, y: targetY });
+      tl.to(content, { x: targetX, duration: 0.3, ease: 'power2.out' });
       teleportRef.current = false;
-    } else if (prev.section !== section || prev.sub !== subSection) {
-      const easeType = isHorizontal ? 'elastic.out(0.1, 1)' : 'power3.out'; // УМЕНЬШЕНИЕ АНИМАЦИИ ПЕРЕВОРАЧИВАНИЯ ДЛЯ ПК
-      gsap.to(content, { x: targetX, y: targetY, duration: 0.6, ease: easeType });
+    } else if (
+      prev.section !== section ||
+      prev.sub !== subSection
+    ) {
+      // Если свайп горизонтальный, можно заменить ease на 'elastic.out(...)'
+      const easeType =
+        isHorizontal && prev.section !== section
+          ? 'elastic.out(0.1, 1)'
+          : 'power3.out';
+
+      gsap.to(content, {
+        x: targetX,
+        y: targetY,
+        duration: 0.6,
+        ease: easeType,
+      });
     }
+
     prevRef.current = { section, sub: subSection };
+
     return () => {
       container.removeEventListener('touchstart', onTouchStart);
       container.removeEventListener('touchmove', onTouchMove);
@@ -176,11 +233,13 @@ export default function App() {
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [section, subSection]);
-  // Функция для автоматического перехода на секцию 2
+
+  // Если хотим «Погрузиться» из HeroScene и сразу перелистнуться вправо
   const handleExploreClick = () => {
-    setSection(1); // Устанавливаем секцию 2 (индекс 1)
-    setSubSection(0); // Сбрасываем подсекцию
+    setSection(1);
+    setSubSection(0);
   };
+
   return (
     <div
       ref={containerRef}
@@ -188,54 +247,65 @@ export default function App() {
       style={{ touchAction: 'none', userSelect: 'none' }}
     >
       <div ref={contentRef} className="flex w-[300vw]">
-        {/* Секция 1 */}
+        {/* 
+          Секция 1 — HeroScene (результат клика будет не scrollIntoView, а handleExploreClick)
+        */}
         <section className="flex-shrink-0 w-screen h-screen p-1">
-          <div className="w-full h-full relative rounded-xl shadow-lg overflow-hidden">
-            <HeroSection visible={section === 0}
-              onDiveComplete={() => {
-                setSection(1);
-                setSubSection(0);
-              }} />
-          </div>
+          <HeroScene onDiveComplete={handleExploreClick} />
         </section>
-
 
         {/* Секция 2 */}
         <section className="flex-shrink-0 w-screen flex flex-col">
           <div className="h-screen p-1">
             <div className="w-full h-full bg-[#2C2F3A] rounded-xl shadow-lg flex items-center justify-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-[#F4F5F7]" style={{ fontFamily: 'Manrope' }}>
+              <h1
+                className="text-3xl md:text-4xl font-bold text-[#F4F5F7]"
+                style={{ fontFamily: 'Manrope' }}
+              >
                 Наши продукты
               </h1>
             </div>
           </div>
           <div className="h-screen p-1">
             <div className="w-full h-full bg-[#4A4E61] rounded-xl shadow-lg flex items-center justify-center">
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#E8DED2]" style={{ fontFamily: 'Manrope' }}>
+              <h2
+                className="text-2xl md:text-3xl font-semibold text-[#E8DED2]"
+                style={{ fontFamily: 'Manrope' }}
+              >
                 Премиум решения
               </h2>
             </div>
           </div>
           <div className="h-screen p-1">
             <div className="w-full h-full bg-[#4A4E61] rounded-xl shadow-lg flex items-center justify-center">
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#D4AF37]" style={{ fontFamily: 'Manrope' }}>
+              <h2
+                className="text-2xl md:text-3xl font-semibold text-[#D4AF37]"
+                style={{ fontFamily: 'Manrope' }}
+              >
                 Эксклюзивные предложения
               </h2>
             </div>
           </div>
         </section>
+
         {/* Секция 3 */}
         <section className="flex-shrink-0 w-screen flex flex-col">
           <div className="h-screen p-1">
             <div className="w-full h-full bg-[#2C2F3A] rounded-xl shadow-lg flex items-center justify-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-[#F4F5F7]" style={{ fontFamily: 'Manrope' }}>
+              <h1
+                className="text-3xl md:text-4xl font-bold text-[#F4F5F7]"
+                style={{ fontFamily: 'Manrope' }}
+              >
                 Свяжитесь с нами
               </h1>
             </div>
           </div>
           <div className="h-screen p-1">
             <div className="w-full h-full bg-[#4A4E61] rounded-xl shadow-lg flex items-center justify-center">
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#E8DED2]" style={{ fontFamily: 'Manrope' }}>
+              <h2
+                className="text-2xl md:text-3xl font-semibold text-[#E8DED2]"
+                style={{ fontFamily: 'Manrope' }}
+              >
                 Консультация эксперта
               </h2>
             </div>

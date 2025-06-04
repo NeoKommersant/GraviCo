@@ -1,0 +1,94 @@
+/* src/components/HeroScene.css */
+
+/* Занимает весь экран */
+.hero-container {
+   position: relative;
+   width: 100%;
+   height: 100vh;
+   background-color: #1D1E26;
+   overflow: hidden;
+ }
+ 
+ /* Параллакс-фон (пока просто бесцветный блок) */
+ .hero-parallax {
+   position: absolute;
+  width: 120%;    /* чуть больше, чтобы при смещении не было «ниток» по краям */
+  height: 120%;
+  top: -10%;
+  left: -10%;
+  background-image: url('/images/parallax-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+ }
+ /* === 1. Анимация фона при «погружении» === */
+.hero-parallax.parallax-dive {
+   animation: bgDive 1s forwards ease-in;
+ }
+ 
+ @keyframes bgDive {
+   0% {
+     transform: translate(0, 0) scale(1);
+     opacity: 1;
+   }
+   100% {
+     transform: translate(0, 0) scale(3);
+     opacity: 0;
+   }
+ }
+ 
+ /* === 2. Анимация букв при «погружении» === */
+ .logo-letter.letter-dive {
+   animation: letterDive 1s forwards ease-in;
+ }
+ 
+ @keyframes letterDive {
+   0% {
+     transform: translateY(0) scale(1);
+     opacity: 1;
+   }
+   100% {
+     transform: translateY(50vh) scale(0);
+     opacity: 0;
+   }
+ }
+ /* Буквы-лого по центру */
+ .logo-container {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   display: flex;
+ }
+ 
+ .logo-letter {
+   font-family: 'Manrope', sans-serif;
+   font-size: 4rem;
+   font-weight: 900;
+   color: #FFFFFF;
+   margin: 0 0.1rem;
+ }
+ 
+ /* Кнопка «Погрузиться» */
+ .dive-button {
+   position: absolute;
+   bottom: 15%;
+   left: 50%;
+   transform: translateX(-50%);
+   padding: 0.75rem 1.5rem;
+   font-family: 'Manrope', sans-serif;
+   font-size: 1.25rem;
+   font-weight: 700;
+   color: #000;
+   background-color: #FFCC00;
+   border: none;
+   border-radius: 0.5rem;
+   cursor: pointer;
+ }
+ 
+ .button-disabled {
+   opacity: 0.5;
+   pointer-events: none;
+ }
+ 
