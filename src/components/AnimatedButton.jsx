@@ -1,4 +1,3 @@
-jsx
 import { useState, useEffect, useRef } from 'react';
 const AnimatedButton = ({ children, onClick, className = '' }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
