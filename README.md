@@ -1,4 +1,15 @@
 # Gravico
-Gravico — это digital-вселенная, в которой соединяются маркетинг, визуал и технологии. Главная цель — создавать сайты, которые затягивают, продукты, которые продают, и бренды, которые чувствуются.
-Проект управляется Андреем Лазоркиным и развивается как платформа: Gravico Studio, Academy, Metrics и др.
-01.06.2025 Все права защищены 
+
+GraviCo - digital ecosystem designed to combine visual architecture, marketing, brand-architecture and unique web experience.
+
+‘ �“ Project with depth immersion, style and audio-visual immersion to deliver perfect digital journey.
+
+- Technologies: React, Tailwind, Lenis, ScrollTrigger, GSAP
+- Brand Stacking: Studio / Academy / Metrics
+- Slogan: dмонтоверсий от длать как ‘
+- Date: 01.06.2025
+
+… Visit: https://gravico.com
+
+# Installation (coming soon)
+Marketing with gravity. Ready.
