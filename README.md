@@ -7,7 +7,7 @@ GraviCo - digital ecosystem designed to combine visual architecture, marketing, 
 - Technologies: React, Tailwind, Lenis, ScrollTrigger, GSAP
 
 - Brand Stacking: Studio / Academy / Metrics
-- Slogan: marketing s pogurzheniem
+- Slogan: marketing İ поломогисть попость черения
 - Date: 01.06.2025
 
-🔩 Visit: [gravico.com](https://gravico.com)
+… Visit: https://gravico.com
