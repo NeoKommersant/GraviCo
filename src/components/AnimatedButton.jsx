@@ -1,4 +1,3 @@
-jsx
 import { useState, useEffect, useRef } from 'react';
 const AnimatedButton = ({ children, onClick, className = '' }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -7,38 +6,40 @@ const AnimatedButton = ({ children, onClick, className = '' }) => {
   const handleClick = async () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    // Fade out all elements except the button
-    document.querySelectorAll('body > *:not(.video-overlay)').forEach(el => {
+    document.querySelectorAll('body > *:not(.video-overlay)').forEach((el) => {
       el.style.transition = 'opacity 2.5s ease-out';
       el.style.opacity = '0';
     });
-    // Show video overlay after initial fade
     setTimeout(() => {
       if (overlayRef.current) {
-        overlayRef.current.style.display = 'block';
-        if (videoRef.current) {
-          videoRef.current.play();
-        }
+        overlayRef.current.classList.remove('hidden');
+      }
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => {
+          if (onClick) onClick();
+        });
+        videoRef.current.onended = () => {
+          if (onClick) onClick();
+        };
+        videoRef.current.onerror = () => {
+          if (onClick) onClick();
+        };
+      } else {
+        if (onClick) onClick();
       }
     }, 1000);
-    // Handle video completion
-    if (videoRef.current) {
-      videoRef.current.onended = () => {
-        if (onClick) onClick();
-      };
-    }
   };
   useEffect(() => {
     // Create video overlay element
     const overlay = document.createElement('div');
     overlay.className = 'video-overlay fixed top-0 left-0 w-screen h-screen hidden z-50';
-    overlay.ref = overlayRef;
+    overlayRef.current = overlay;
     const video = document.createElement('video');
     video.className = 'w-full h-full object-cover';
     video.src = '/videos/deep_anima.gif';
     video.muted = true;
     video.playsInline = true;
-    video.ref = videoRef;
+    videoRef.current = video;
     overlay.appendChild(video);
     document.body.appendChild(overlay);
     return () => {

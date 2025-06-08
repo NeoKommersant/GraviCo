@@ -2,7 +2,7 @@
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 // import HeroSection from './HeroSection'; // ← пока не используем, можно убрать
-import HeroScene from './components/HeroScene';
+import HeroIntro from './components/HeroIntro';
 
 export default function App() {
   const containerRef = useRef(null);
@@ -234,7 +234,7 @@ export default function App() {
     };
   }, [section, subSection]);
 
-  // Если хотим «Погрузиться» из HeroScene и сразу перелистнуться вправо
+  // Если хотим «Погрузиться» из интро и сразу перелистнуться вправо
   const handleExploreClick = () => {
     setSection(1);
     setSubSection(0);
@@ -247,11 +247,13 @@ export default function App() {
       style={{ touchAction: 'none', userSelect: 'none' }}
     >
       <div ref={contentRef} className="flex w-[300vw]">
-        {/* 
-          Секция 1 — HeroScene (результат клика будет не scrollIntoView, а handleExploreClick)
+        {/*
+          Секция 1 — интро-анимация (результат клика будет не scrollIntoView, а handleExploreClick)
         */}
         <section className="flex-shrink-0 w-screen h-screen p-1">
-          <HeroScene onDiveComplete={handleExploreClick} />
+          <div className="w-full h-full bg-[#1D1E26] rounded-xl shadow-lg overflow-hidden">
+            <HeroIntro onDone={handleExploreClick} />
+          </div>
         </section>
 
         {/* Секция 2 */}
