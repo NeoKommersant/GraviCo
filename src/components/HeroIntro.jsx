@@ -81,6 +81,7 @@ export default function HeroIntro({ onDone }) {
     >
       <div className="absolute inset-0 bg-center bg-cover opacity-0" style={{ backgroundImage: "url('/images/parallax-bg.jpg')" }} />
       <h1 className="text-white text-5xl md:text-7xl font-extrabold flex space-x-1 text-center">
+
         {letters.map((ch, i) => (
           <span
             key={i}
@@ -92,6 +93,7 @@ export default function HeroIntro({ onDone }) {
         ))}
       </h1>
       <p className="text-gray-300 mt-4 text-lg md:text-2xl">Маркетинг с погружением</p>
+
       <img
         ref={planetRef}
         src="/images/hero/planet.png"
@@ -100,6 +102,7 @@ export default function HeroIntro({ onDone }) {
       />
 
       <div className="grid grid-cols-5 gap-4 mt-20 w-full max-w-4xl mx-auto">
+
         {services.map((s, i) => (
           <div
             key={i}

@@ -254,6 +254,7 @@ export default function App() {
           <div className="w-full h-full bg-[#1D1E26] rounded-xl shadow-lg overflow-hidden">
             <HeroIntro onDone={handleExploreClick} />
           </div>
+
         </section>
 
         {/* Секция 2 */}

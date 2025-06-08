@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, forwardRef } from 'react';
 
 const AnimatedButton = forwardRef(function AnimatedButton(
@@ -32,12 +33,14 @@ const AnimatedButton = forwardRef(function AnimatedButton(
         if (onClick) onClick();
       }
     }, 1000);
+
   };
   useEffect(() => {
     // Create video overlay element
     const overlay = document.createElement('div');
     overlay.className = 'video-overlay fixed top-0 left-0 w-screen h-screen hidden z-50';
     overlayRef.current = overlay;
+
     const video = document.createElement('video');
     video.className = 'w-full h-full object-cover';
     video.src = '/videos/deep_anima.gif';
