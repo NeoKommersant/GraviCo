@@ -1,5 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-const AnimatedButton = ({ children, onClick, className = '' }) => {
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+
+const AnimatedButton = forwardRef(function AnimatedButton(
+  { children, onClick, className = '' },
+  ref,
+) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const videoRef = useRef(null);
   const overlayRef = useRef(null);
@@ -48,6 +52,7 @@ const AnimatedButton = ({ children, onClick, className = '' }) => {
   }, []);
   return (
     <button
+      ref={ref}
       onClick={handleClick}
       disabled={isTransitioning}
       className={`
@@ -73,10 +78,9 @@ const AnimatedButton = ({ children, onClick, className = '' }) => {
         disabled:cursor-not-allowed
       `}
     >
-      <span className="relative z-10 text-white font-medium">
-        {children}
-      </span>
+      <span className="relative z-10 text-white font-medium">{children}</span>
     </button>
   );
-};
+});
+
 export default AnimatedButton;
