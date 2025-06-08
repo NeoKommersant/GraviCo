@@ -251,7 +251,10 @@ export default function App() {
           Секция 1 — интро-анимация (результат клика будет не scrollIntoView, а handleExploreClick)
         */}
         <section className="flex-shrink-0 w-screen h-screen p-1">
-          <HeroIntro onDone={handleExploreClick} />
+          <div className="w-full h-full bg-[#1D1E26] rounded-xl shadow-lg overflow-hidden">
+            <HeroIntro onDone={handleExploreClick} />
+          </div>
+
         </section>
 
         {/* Секция 2 */}

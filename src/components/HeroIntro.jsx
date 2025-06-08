@@ -77,10 +77,11 @@ export default function HeroIntro({ onDone }) {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-[#1D1E26] flex flex-col items-center justify-center"
+      className="relative w-full h-full overflow-hidden bg-[#1D1E26] flex flex-col items-center justify-center"
     >
       <div className="absolute inset-0 bg-center bg-cover opacity-0" style={{ backgroundImage: "url('/images/parallax-bg.jpg')" }} />
-      <h1 className="text-white text-6xl font-extrabold flex space-x-1">
+      <h1 className="text-white text-5xl md:text-7xl font-extrabold flex space-x-1 text-center">
+
         {letters.map((ch, i) => (
           <span
             key={i}
@@ -91,15 +92,17 @@ export default function HeroIntro({ onDone }) {
           </span>
         ))}
       </h1>
-      <p className="text-gray-300 mt-4">Маркетинг с погружением</p>
+      <p className="text-gray-300 mt-4 text-lg md:text-2xl">Маркетинг с погружением</p>
+
       <img
         ref={planetRef}
         src="/images/hero/planet.png"
         alt="planet"
-        className="w-60 mt-10"
+        className="w-48 md:w-72 mt-10"
       />
 
-      <div className="grid grid-cols-5 gap-4 mt-20 w-full max-w-4xl">
+      <div className="grid grid-cols-5 gap-4 mt-20 w-full max-w-4xl mx-auto">
+
         {services.map((s, i) => (
           <div
             key={i}
