@@ -131,12 +131,28 @@ export default function HeroIntro({ onDone }) {
         <div
           key={i}
           ref={(el) => (servicesRef.current[i] = el)}
-          className="flex flex-col items-center opacity-0"
+          className="flex flex-col items-center opacity-0 group"
+          onMouseEnter={(e) => {
+            gsap.to(e.currentTarget, {
+              scale: 1.1,
+              y: 10, // Изменено с -10 на 10 для движения вниз
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          }}
+          onMouseLeave={(e) => {
+            gsap.to(e.currentTarget, {
+              scale: 1,
+              y: 0,
+              duration: 0.3,
+              ease: "power2.in"
+            });
+          }}
         >
           <img
             src={s.img}
             alt={s.label}
-            className="w-24 mb-2"
+            className="w-24 mb-2 transition-all duration-300 group-hover:brightness-150"
           />
           <span className="text-sm text-gray-300">{s.label}</span>
         </div>
