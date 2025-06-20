@@ -16,17 +16,6 @@ export default function StarBackground() {
       ease: "none"
     });
 
-    // Движение частиц-звёзд
-    starsRef.current.forEach((el) => {
-      gsap.to(el, {
-        y: "-120vh",
-        duration: 40 + Math.random() * 30,
-        repeat: -1,
-        delay: Math.random() * 20,
-        ease: "none"
-      });
-    });
-
     // Параллакс по движению мыши для bg1 и bg3 и звёзд
     const handleMouseMove = (e) => {
       const mouseX = (e.clientX / window.innerWidth - 0.5) * 50; // +/-15px сдвиг
@@ -86,20 +75,6 @@ export default function StarBackground() {
         className="absolute inset-0 bg-repeat-y bg-center bg-contain opacity-30"
         style={{ backgroundImage: "url('/images/parallax-bg3.png')" }}
       />
-      {/* Частицы-звёзды */}
-      {Array.from({ length: 60 }).map((_, i) => (
-        <div
-          key={i}
-          ref={(el) => (starsRef.current[i] = el)}
-          className="absolute w-[2px] h-[2px] bg-white rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            opacity: Math.random() * 0.6 + 0.2,
-            willChange: "transform"
-          }}
-        />
-      ))}
     </div>
   );
 }

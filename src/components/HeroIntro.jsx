@@ -92,9 +92,9 @@ export default function HeroIntro({ onDone }) {
   ref={containerRef}
   className="relative w-full h-screen overflow-hidden bg-[#1D1E26] flex items-center justify-center"
 >
-  {/* Мерцающие звезды поверх фонового слоя */}
-  
+  {/* параллакс звезды фон */}
   <StarBackground />
+    {/* летящие звезды */}
   <CanvasStars />
   {/* 🔹 Основной контент по центру экрана */}
   <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-8">
