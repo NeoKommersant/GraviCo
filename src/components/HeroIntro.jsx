@@ -10,6 +10,7 @@ export default function HeroIntro({ onDone }) {
   const containerRef = useRef(null);
   const lettersRef = useRef([]);
   const planetRef = useRef(null);
+  const planet2Ref = useRef(null);
   const servicesRef = useRef([]);
   const buttonRef = useRef(null);
   const subtitleRef = useRef(null);
@@ -28,7 +29,8 @@ export default function HeroIntro({ onDone }) {
       // Начальное состояние
       mainTimeline
         .set(containerRef.current, { opacity: 0 })
-        .set(planetRef.current, { y: '25vh', scale: 7, opacity: 0 })
+        .set(planetRef.current, { y: '5vh', scale: 1.5, opacity: 0 })
+        .set(planet2Ref.current, { y: '47vh', scale: 7.25, opacity: 0.75 })
         .set(lettersRef.current, { opacity: 0, y: 20 })
         .set(sloganRef.current, { opacity: 0, y: 20 })
         .set(subtitleRef.current, { opacity: 0, y: 20 })
@@ -48,27 +50,31 @@ export default function HeroIntro({ onDone }) {
           duration: 1,
           ease: 'power3.out',
         }, "<")
+        .to(planetRef.current, {
+          opacity: 0.75,
+          duration: 8,
+          ease: 'power4.out'
+        }, "<")
+        .to(planet2Ref.current, {
+          opacity: 0.125,
+          duration: 4,
+          ease: 'power4.out'
+        }, "<")
         .to(sloganRef.current, {
           opacity: 1,
           y: 0,
           duration: 3,
           delay: 2,
           ease: 'power3.out'
-        }, "<")
+        }, "<-2")
         .to(subtitleRef.current, {
           opacity: 1,
           y: 0,
           duration: 0.2,
           ease: 'power3.out'
         }, "<")
-        .to(planetRef.current, {
-            y: 0, 
-            opacity: 0.5, 
-            scale: 1.5, 
-          duration: 5,
-          delay: 0.5,
-          ease: 'power3.out'
-        }, "<");
+
+;
     // Функция инициализации ScrollTrigger
     function initScrollTrigger() {
     }
@@ -123,6 +129,15 @@ export default function HeroIntro({ onDone }) {
       alt="planet"
       className="w-48 md:w-72"
     />
+
+{/* Планета2 */}
+    <img
+      ref={planet2Ref}
+      src="/images/hero/planet2.png"
+      alt="planet2"
+      className="w-48 md:w-72"
+    />
+
   </div>
   {/* 🔹 Сетка иконок/сервисов (ниже центра) */}
   <div className="absolute top-[5%] w-full flex justify-center">
